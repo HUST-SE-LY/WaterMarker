@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<input type="file" class="file_input" accept="image/png">
+<input type="text" placeholder="签名颜色" class="color_input">
+<input type="text" placeholder="签名内容" class="content_input">
+<input type="text" placeholder="签名字号" class="font_input">
+<input type="text" placeholder="文件名" class="file_name">
+<button class="download_button">点击下载</button>
+<script src="WaterMark.js"></script>
+<script>
+  let name;
+  const fileInput=document.querySelector(".file_input");
+  const colorInput=document.querySelector(".color_input");
+  const fontInput=document.querySelector(".font_input");
+  const contentInput=document.querySelector(".content_input");
+  const nameInput=document.querySelector(".file_name");
+  const downloadButton=document.querySelector(".download_button");
+  fileInput.addEventListener("input",(e)=>{
+    if(fileInput.value) {
+      name=e.target.files[0].name;
+      let color=colorInput.value?colorInput.value:"white";
+      let content=contentInput.value?contentInput.value:"丁真珍珠";
+      let fontsize=fontInput.value?fontInput.value:28;
+      const wm=new WaterMark(color,content,fontsize);
+      let file=e.target.files[0];
+      let reader=new FileReader();
+      reader.readAsDataURL(file);//将文件转换成URL便于canvas创建
+      reader.onload=(e)=>{
+        let url=e.target.result;
+        wm.upload(url)
+      }
+    }
+  })
+  downloadButton.addEventListener("click",()=>{
+    const Wm=new WaterMark();
+    Wm.download(nameInput.value?nameInput.value:name);
+  })
+
+
+
+
+</script>
+</body>
+</html>
